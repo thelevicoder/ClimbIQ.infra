@@ -26,7 +26,7 @@ export class ClimbIqInfraStack extends cdk.Stack {
     new NodejsFunction(this, 'ClimbIQInfraFunction', {
       functionName: 'ClimbIQInfraFunction',
       runtime: lambda.Runtime.NODEJS_20_X,
-      handler: 'ClimbIQGrade',
+      handler: 'ClimbIQGrade', // Ensure the handler matches the file name
       entry: join(__dirname, 'handlers', 'ClimbIQGrade.js'),
       role: climbIQinfraRole,
     });
