@@ -19,15 +19,28 @@ export class ClimbIqInfraStack extends cdk.Stack {
 
     climbIQinfraRole.addToPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      actions: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
-      resources: ['arn:aws:logs:*:*:*'],
+      actions: [
+        'logs:CreateLogGroup',
+        'logs:CreateLogStream',
+        'logs:PutLogEvents',
+        'dynamodb:Scan', // Add Scan permission
+        'dynamodb:GetItem', // Add GetItem permission
+        'dynamodb:PutItem', // Add PutItem permission
+        'dynamodb:UpdateItem', // Add UpdateItem permission
+        'dynamodb:DeleteItem' // Add DeleteItem permission
+      ],
+      resources: [
+        'arn:aws:logs:*:*:*',
+        'arn:aws:dynamodb:us-east-1:288761739161:table/UserData'
+         // Add DynamoDB table ARN
+      ],
     }));
 
     new NodejsFunction(this, 'ClimbIQInfraFunction', {
       functionName: 'ClimbIQInfraFunction',
-      runtime: lambda.Runtime.NODEJS_20_X,
-      handler: 'ClimbIQGrade', // Ensure the handler matches the file name
-      entry: join(__dirname, 'handlers', 'ClimbIQGrade.js'),
+      runtime: lambda.Runtime.NODEJS_20_X, // Change runtime to Node.js 18.x
+      handler: 'ClimbIQGrade', // Ensure the handler matches the exported function
+      entry: join(__dirname, 'handlers', 'ClimbIQGrade.js'), // Ensure the path is correct
       role: climbIQinfraRole,
     });
 
